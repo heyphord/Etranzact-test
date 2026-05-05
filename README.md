@@ -1,89 +1,103 @@
 
-## BY HAYFORD OWUSU ANSAH
-# ETRANZACT SOFTWARE INTERVIEW REQUIRMENTS DOCUMENTS 
+## By Hayford Owusu Ansah
 
-## PROJECT OBJECTIVE/GOAL
-Build a simple banking application that allows customers to manage their ccounts, perform transactions and view their account details.
+# ETRANZACT SOFTWARE INTERVIEW REQUIREMENTS DOCUMENT
+
+## PROJECT OBJECTIVE / GOAL
+
+Build a simple banking application that allows customers to manage their accounts, perform transactions, and view their account details.
 
 ## FUNCTIONAL REQUIREMENTS
 
-1.  Customers should be able to signup. I assumed customer will use GhanaCard ID to signup. I also assumed a primary account will be created for the user on first signup. Subsequent account types be created later. 
+1. Customers should be able to sign up. I assumed customers will use a Ghana Card ID to sign up. I also assumed a primary account will be created for the user on first sign up. Additional account types can be created later.
 
-2.  Customer should be able to login (i assumed users will use ghanacard number and PIN for authentication. a simple token will be returned if authentication is true)
+2. Customers should be able to log in. I assumed users will use their Ghana Card number and PIN for authentication. A simple token will be returned when authentication succeeds.
 
-3.  Customer should be able to make deposit into their accounts (Token should be valid before allowing withdrawal. Althogh future version, will be open to allow others to deposite into that account. )
+3. Customers should be able to deposit into their accounts. The token must be valid before allowing a deposit. Although a future version could allow others to deposit into that account.
 
+4. Customers should be able to withdraw money from their accounts. Users should only be allowed to perform this operation if the token is valid and not expired.
 
-4.  Customers should be able to withdral money from their accounts  (Users must only be allowed to do this operation only if token is valid and not expired) 
+5. Customers should be able to see their transaction history.
 
-5.  Customer should be able to see their transaction history
+6. Customers should be able to change their PIN. This feature was added to meet the non-functional security requirements of this project.
 
-6. Change customers should be able to change their pins. This feature is added to meat the non-functional requirements of this project.
+## NON-FUNCTIONAL REQUIREMENTS
 
+1. **Simplicity:** The system should be easy to use. API interfaces should be predictable and intuitive so the frontend team can integrate easily.
 
-## NON FUNCTIONAL REQUIREMENTS
+2. **Security:** We are dealing with sensitive information, such as money. Only authorized individuals should be allowed to access a user's balance or withdraw funds. Future versions of this app could allow anyone to deposit into an account.
 
-1.  Simplicity: The system should be easy to use. API interfaces should be predictable and intuitive to so frontend team can easily integrate
+Another security measure is capturing the Ghana Card at sign-up. This helps us identify the user in case of malicious activity.
 
-2. Secure: Since we are dealing with a sensitive information like money. Only authorized individualts should be allowed to access the users balance, or withdraw. Future versions of this app can support anyone depositing into the account.
-
-Another secure feature added is the addition of ghana card during signup. this will help us track the user incase of malicious activities.
-
-I added an additional feature where a customer can change their pins after login. this is to meet the SECURE non-functional requirements. 
+An additional feature lets customers change their PIN after log-in. This supports the **secure** non-functional requirement.
 
 ## DATABASE DESIGN
 
 ### Entities
-#### Customers : Stores details of signup up customers
 
-#### Accounts : List of all customer accounts. key fields include is_primary , account_type and balanace
+#### Customers
 
-#### Transactions : Records all Credit and Debit activities on the Accounts
-
-### Entity-Attributes
-
-#### Customer
-id -PK
-fname
-laname
-dob
-ghanacard_number
-pin
+Stores details of signed-up customers.
 
 #### Accounts
-id- PK
-type
-is_primary
-balance
-customer_id- FK
+
+List of all customer accounts. Key fields include `is_primary`, account type, and balance.
 
 #### Transactions
-id- PK
-type (DEPOSIT/WITHDRAWAL)
-is_primary
-amount
-balanceBefore
-balanceAfter
-occuredAt
-account_id- FK
 
+Records all credit and debit activity on accounts.
+
+### Entity attributes
+
+#### Customer
+
+- `id` — PK  
+- `fname`  
+- `lname`  
+- `dob`  
+- `ghanacard_number`  
+- `pin`  
+
+#### Accounts
+
+- `id` — PK  
+- `type`  
+- `is_primary`  
+- `balance`  
+- `customer_id` — FK  
+
+#### Transactions
+
+- `id` — PK  
+- `type` (DEPOSIT / WITHDRAW)  
+- `amount`  
+- `balanceBefore`  
+- `balanceAfter`  
+- `occurredAt`  
+- `account_id` — FK  
 
 ## Proposed APIs
 
-1.  {{baseUrl}}/api/v1/customers/signup
-2.  {{baseUrl}}/api/v1/customers/login
-3.  {{baseUrl}}/api/v1/accounts/:accountId/balance
-4.  {{baseUrl}}/api/v1/accounts/:accountId/deposit
-5.  {{baseUrl}}/api/v1/accounts/:accountId/withdraw
-6.  {{baseUrl}}/api/v1/accounts/:accountId/transactions?page=0&size=20
+1. `{{baseUrl}}/api/v1/customers/signup`
+2. `{{baseUrl}}/api/v1/customers/login`
+3. `{{baseUrl}}/api/v1/customers/pin` (change PIN, after login)
+4. `{{baseUrl}}/api/v1/accounts/:accountId/balance`
+5. `{{baseUrl}}/api/v1/accounts/:accountId/deposit`
+6. `{{baseUrl}}/api/v1/accounts/:accountId/withdraw`
+7. `{{baseUrl}}/api/v1/accounts/:accountId/transactions?page=0&size=20`
 
+## Steps to run
 
-# Steps to run
 1. Clone this project from my repo: https://github.com/heyphord/Etranzact-test.git
 
-2. create your own application.properties file at src/main/resources/application.properties. Ideally this should NOT be commited to the repo. but i added it for simplicy. I use in memeory database so you wont need to spin up a database server to test this project
 
-3. Build and run this project. Your IDE will automatically install all the projects dependencies
+2. Create your own `application.properties` file at `src/main/resources/application.properties`. Ideally this should **not** be committed to the repository, but I added one for simplicity. The project uses an in-memory database, so you do not need to run a separate database server to test it.
 
-4. I have also exported the openapi file used to test this application. Just import it into postman and you are good to go. File is located at the root of this project at /openapi.yaml
 
+3. Build and run this project. Your IDE will install the project’s dependencies.
+
+
+4. An OpenAPI file is included for testing this application. Import it into Postman (or similar). It is at the project root: `openapi.yaml`.
+
+
+### Looking forward to hearing from you again, Hayford
