@@ -7,9 +7,9 @@ Build a simple banking application that allows customers to manage their ccounts
 
 ## FUNCTIONAL REQUIREMENTS
 
-1.  Customers should be able to signup. I assumed a primary account will be created for the user on first signup. subsequent account type be created later. 
+1.  Customers should be able to signup. I assumed customer will use GhanaCard ID to signup. I also assumed a primary account will be created for the user on first signup. Subsequent account types be created later. 
 
-2.  Customer should be able to login (i assumed users will use account number and PIN for authentication. a simple token will be returned if authentication is true)
+2.  Customer should be able to login (i assumed users will use ghanacard number and PIN for authentication. a simple token will be returned if authentication is true)
 
 3.  Customer should be able to make deposit into their accounts (Token should be valid before allowing withdrawal. Althogh future version, will be open to allow others to deposite into that account. )
 
