@@ -1,6 +1,7 @@
 package com.gmfs.demo;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gmfs.demo.dto.AccountBalanceResponse;
 import com.gmfs.demo.dto.AmountRequest;
 import com.gmfs.demo.dto.CustomerLoginRequest;
 import com.gmfs.demo.dto.SignupRequest;
@@ -99,6 +100,16 @@ class CustomerFlowTests {
         TransactionMutationResponse afterWithdraw = objectMapper.readValue(
                 withdrawResult.getResponse().getContentAsString(), TransactionMutationResponse.class);
         assertThat(afterWithdraw.getBalance()).isEqualByComparingTo(new BigDecimal("60.2500"));
+
+        MvcResult balanceResult = mockMvc.perform(get("/api/v1/accounts/{accountId}/balance", accountId)
+                        .header("X-Auth-Token", token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        AccountBalanceResponse balance = objectMapper.readValue(
+                balanceResult.getResponse().getContentAsString(), AccountBalanceResponse.class);
+        assertThat(balance.getAccountId()).isEqualTo(accountId);
+        assertThat(balance.getBalance()).isEqualByComparingTo(new BigDecimal("60.2500"));
 
         MvcResult historyResult = mockMvc.perform(get("/api/v1/accounts/{accountId}/transactions", accountId)
                         .header("X-Auth-Token", token)

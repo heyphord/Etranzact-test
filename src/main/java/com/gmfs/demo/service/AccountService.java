@@ -3,6 +3,7 @@ package com.gmfs.demo.service;
 import com.gmfs.demo.exception.NotFoundException;
 import com.gmfs.demo.exception.UnauthorizedException;
 import com.gmfs.demo.model.Account;
+import com.gmfs.demo.model.AccountType;
 import com.gmfs.demo.model.TransactionType;
 import com.gmfs.demo.model.WalletTransaction;
 import com.gmfs.demo.repository.AccountRepository;
@@ -75,6 +76,13 @@ public class AccountService {
         return new MutationResult(tx.getId(), after);
     }
 
+    @Transactional(readOnly = true)
+    public BalanceResult getBalance(Long accountId, String authToken) {
+        Long customerId = authService.requireCustomerId(authToken);
+        Account account = loadAccountOwnedByCustomer(accountId, customerId);
+        return new BalanceResult(account.getId(), account.getBalance(), account.getType(), account.isPrimary());
+    }
+
     private static void validatePositiveAmount(BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
@@ -91,4 +99,6 @@ public class AccountService {
     }
 
     public record MutationResult(Long transactionId, BigDecimal newBalance) {}
+
+    public record BalanceResult(Long accountId, BigDecimal balance, AccountType type, boolean primary) {}
 }

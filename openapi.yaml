@@ -73,6 +73,29 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+
+  /api/v1/accounts/{accountId}/balance:
+    get:
+      tags: [Accounts]
+      summary: Get current balance for an account
+      operationId: getAccountBalance
+      parameters:
+        - $ref: "#/components/parameters/AccountId"
+        - $ref: "#/components/parameters/AuthToken"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccountBalanceResponse"
+              example:
+                accountId: 10
+                balance: 200.0
+                type: SAVINGS
+                primary: true
+        "401":
+          $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
 
@@ -108,8 +131,6 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/Conflict"
 
   /api/v1/accounts/{accountId}/withdraw:
     post:
@@ -143,8 +164,6 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "404":
           $ref: "#/components/responses/NotFound"
-        "409":
-          $ref: "#/components/responses/Conflict"
 
   /api/v1/accounts/{accountId}/transactions:
     get:
@@ -305,6 +324,27 @@ components:
     TransactionType:
       type: string
       enum: [DEPOSIT, WITHDRAW]
+
+    AccountType:
+      type: string
+      enum: [SAVINGS, CURRENT]
+      description: Savings or current account.
+
+    AccountBalanceResponse:
+      type: object
+      required: [accountId, balance, type, primary]
+      properties:
+        accountId:
+          type: integer
+          format: int64
+        balance:
+          type: number
+          format: double
+        type:
+          $ref: "#/components/schemas/AccountType"
+        primary:
+          type: boolean
+          description: True if this is the customer's primary account.
 
     TransactionHistoryItem:
       type: object
