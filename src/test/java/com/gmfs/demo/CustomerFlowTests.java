@@ -3,6 +3,7 @@ package com.gmfs.demo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gmfs.demo.dto.AccountBalanceResponse;
 import com.gmfs.demo.dto.AmountRequest;
+import com.gmfs.demo.dto.ChangePinRequest;
 import com.gmfs.demo.dto.CustomerLoginRequest;
 import com.gmfs.demo.dto.SignupRequest;
 import com.gmfs.demo.dto.SignupResponse;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -121,5 +123,58 @@ class CustomerFlowTests {
         TransactionHistoryPageResponse history = objectMapper.readValue(
                 historyResult.getResponse().getContentAsString(), TransactionHistoryPageResponse.class);
         assertThat(history.getContent()).hasSize(2);
+    }
+
+    @Test
+    void changePinAfterLogin() throws Exception {
+        String ghanacardNumber = "GHA-" + UUID.randomUUID();
+
+        SignupRequest signup = new SignupRequest();
+        signup.setFirstName("Test");
+        signup.setLastName("User");
+        signup.setDob(LocalDate.of(1991, 1, 1));
+        signup.setGhanacardNumber(ghanacardNumber);
+        signup.setPin("1111");
+
+        mockMvc.perform(post("/api/v1/customers/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(signup)))
+                .andExpect(status().isCreated());
+
+        CustomerLoginRequest loginOld = new CustomerLoginRequest();
+        loginOld.setGhanacardNumber(ghanacardNumber);
+        loginOld.setPin("1111");
+
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/customers/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginOld)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String token = objectMapper.readValue(loginResult.getResponse().getContentAsString(), LoginResponse.class).getToken();
+
+        ChangePinRequest changePin = new ChangePinRequest();
+        changePin.setCurrentPin("1111");
+        changePin.setNewPin("9999");
+
+        mockMvc.perform(patch("/api/v1/customers/pin")
+                        .header("X-Auth-Token", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(changePin)))
+                .andExpect(status().isNoContent());
+
+        CustomerLoginRequest loginNew = new CustomerLoginRequest();
+        loginNew.setGhanacardNumber(ghanacardNumber);
+        loginNew.setPin("9999");
+        mockMvc.perform(post("/api/v1/customers/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginNew)))
+                .andExpect(status().isOk());
+
+        loginOld.setPin("1111");
+        mockMvc.perform(post("/api/v1/customers/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginOld)))
+                .andExpect(status().isUnauthorized());
     }
 }

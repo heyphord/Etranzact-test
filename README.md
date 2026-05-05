@@ -18,6 +18,8 @@ Build a simple banking application that allows customers to manage their ccounts
 
 5.  Customer should be able to see their transaction history
 
+6. Change customers should be able to change their pins. This feature is added to meat the non-functional requirements of this project.
+
 
 ## NON FUNCTIONAL REQUIREMENTS
 
@@ -26,6 +28,8 @@ Build a simple banking application that allows customers to manage their ccounts
 2. Secure: Since we are dealing with a sensitive information like money. Only authorized individualts should be allowed to access the users balance, or withdraw. Future versions of this app can support anyone depositing into the account.
 
 Another secure feature added is the addition of ghana card during signup. this will help us track the user incase of malicious activities.
+
+I added an additional feature where a customer can change their pins after login. this is to meet the SECURE non-functional requirements. 
 
 ## DATABASE DESIGN
 

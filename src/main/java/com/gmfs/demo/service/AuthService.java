@@ -1,6 +1,7 @@
 package com.gmfs.demo.service;
 
 import com.gmfs.demo.exception.ConflictException;
+import com.gmfs.demo.exception.NotFoundException;
 import com.gmfs.demo.exception.UnauthorizedException;
 import com.gmfs.demo.model.Account;
 import com.gmfs.demo.model.AccountType;
@@ -91,6 +92,24 @@ public class AuthService {
         return authTokenRepository.findByTokenAndExpiresAtAfter(token.trim(), Instant.now())
                 .map(AuthToken::getCustomerId)
                 .orElseThrow(() -> new UnauthorizedException("Invalid or expired token"));
+    }
+
+    @Transactional
+    public void changePin(String authToken, String currentPin, String newPin) {
+        Long customerId = requireCustomerId(authToken);
+        if (currentPin != null && currentPin.equals(newPin)) {
+            throw new IllegalArgumentException("New PIN must differ from current PIN");
+        }
+
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotFoundException("Customer not found"));
+
+        if (!passwordEncoder.matches(currentPin, customer.getPinHash())) {
+            throw new UnauthorizedException("Current PIN is incorrect");
+        }
+
+        customer.setPinHash(passwordEncoder.encode(newPin));
+        customerRepository.save(customer);
     }
 
     public record SignupResult(Long customerId, Long primaryAccountId) {}

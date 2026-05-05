@@ -74,6 +74,35 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
 
+  /api/v1/customers/pin:
+    patch:
+      tags: [Customers]
+      summary: Change PIN (requires valid login token)
+      description: >-
+        Verifies `currentPin`, then updates to `newPin`. The existing `X-Auth-Token`
+        remains valid after a successful change.
+      operationId: changeCustomerPin
+      parameters:
+        - $ref: "#/components/parameters/AuthToken"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePinRequest"
+            example:
+              currentPin: "1234"
+              newPin: "5678"
+      responses:
+        "204":
+          description: PIN updated; no response body.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+
   /api/v1/accounts/{accountId}/balance:
     get:
       tags: [Accounts]
@@ -302,6 +331,19 @@ components:
         expiresAt:
           type: string
           format: date-time
+
+    ChangePinRequest:
+      type: object
+      required: [currentPin, newPin]
+      properties:
+        currentPin:
+          type: string
+          minLength: 1
+          description: Existing PIN (must match current hash).
+        newPin:
+          type: string
+          minLength: 1
+          description: Replacement PIN (must differ from current PIN).
 
     AmountRequest:
       type: object
