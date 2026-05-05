@@ -10,7 +10,6 @@ tags:
   - name: Customers
   - name: Accounts
   - name: Transactions
-  - name: Demo
 
 paths:
   /api/v1/customers/signup:
@@ -183,92 +182,6 @@ paths:
         "404":
           $ref: "#/components/responses/NotFound"
 
-  /api/v1/login:
-    post:
-      tags: [Demo]
-      summary: Demo login (echoes request body)
-      operationId: demoLogin
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LoginRequestDTO"
-            example:
-              username: demo
-              password: secret
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/LoginRequestDTO"
-
-  /api/v1/populate-db:
-    post:
-      tags: [Demo]
-      summary: Demo call to external API and return raw JSON string
-      operationId: populateDb
-      responses:
-        "200":
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: string
-            application/json:
-              schema:
-                type: string
-
-  /api/v1/get-gb:
-    get:
-      tags: [Demo]
-      summary: Demo health-ish endpoint
-      operationId: getGb
-      responses:
-        "200":
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: string
-              example: Get db api working
-
-  /api/v1/test:
-    get:
-      tags: [Demo]
-      summary: Demo endpoint returning a DTO (GET with a request body)
-      operationId: demoTest
-      requestBody:
-        required: false
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/LoginRequestDTO"
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DemoResponseDto"
-              example:
-                value: Response from DTO
-
-  /api/v1/test-with-service:
-    get:
-      tags: [Demo]
-      summary: Demo endpoint using a service
-      operationId: demoWithService
-      responses:
-        "200":
-          description: OK
-          content:
-            text/plain:
-              schema:
-                type: string
-
 components:
   parameters:
     AccountId:
@@ -435,22 +348,6 @@ components:
         size:
           type: integer
           format: int32
-
-    LoginRequestDTO:
-      type: object
-      required: [username, password]
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-
-    DemoResponseDto:
-      type: object
-      required: [value]
-      properties:
-        value:
-          type: string
 
     ApiError:
       type: object
