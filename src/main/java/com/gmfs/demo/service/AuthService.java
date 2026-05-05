@@ -29,16 +29,16 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public SignupResult signup(String firstName, String lastName, java.time.LocalDate dob, String idNumber, String pin) {
-        if (customerRepository.existsByIdNumber(idNumber)) {
-            throw new ConflictException("Customer with this id number already exists");
+    public SignupResult signup(String firstName, String lastName, java.time.LocalDate dob, String ghanacardNumber, String pin) {
+        if (customerRepository.existsByIdNumber(ghanacardNumber)) {
+            throw new ConflictException("Customer with this Ghana Card number already exists");
         }
 
         Customer customer = Customer.builder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .dob(dob)
-                .idNumber(idNumber)
+                .idNumber(ghanacardNumber)
                 .pinHash(passwordEncoder.encode(pin))
                 .createdAt(Instant.now())
                 .build();
@@ -62,12 +62,12 @@ public class AuthService {
     }
 
     @Transactional
-    public LoginResult login(String idNumber, String pin) {
-        Customer customer = customerRepository.findByIdNumber(idNumber)
-                .orElseThrow(() -> new UnauthorizedException("Invalid id number or PIN"));
+    public LoginResult login(String ghanacardNumber, String pin) {
+        Customer customer = customerRepository.findByIdNumber(ghanacardNumber)
+                .orElseThrow(() -> new UnauthorizedException("Invalid Ghana Card number or PIN"));
 
         if (!passwordEncoder.matches(pin, customer.getPinHash())) {
-            throw new UnauthorizedException("Invalid id number or PIN");
+            throw new UnauthorizedException("Invalid Ghana Card number or PIN");
         }
 
         authTokenRepository.deleteByCustomerId(customer.getId());

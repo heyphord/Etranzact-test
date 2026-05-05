@@ -38,13 +38,13 @@ class CustomerFlowTests {
 
     @Test
     void signupLoginDepositWithdrawAndHistory() throws Exception {
-        String idNumber = "ID-" + UUID.randomUUID();
+        String ghanacardNumber = "GHA-" + UUID.randomUUID();
 
         SignupRequest signup = new SignupRequest();
         signup.setFirstName("Ada");
         signup.setLastName("Lovelace");
         signup.setDob(LocalDate.of(1990, 5, 5));
-        signup.setIdNumber(idNumber);
+        signup.setGhanacardNumber(ghanacardNumber);
         signup.setPin("1234");
 
         MvcResult signupResult = mockMvc.perform(post("/api/v1/customers/signup")
@@ -58,7 +58,7 @@ class CustomerFlowTests {
         assertThat(created.getPrimaryAccountId()).isNotNull();
 
         CustomerLoginRequest login = new CustomerLoginRequest();
-        login.setIdNumber(idNumber);
+        login.setGhanacardNumber(ghanacardNumber);
         login.setPin("1234");
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/customers/login")

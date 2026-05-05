@@ -28,7 +28,7 @@ public class CustomerController {
                 request.getFirstName(),
                 request.getLastName(),
                 request.getDob(),
-                request.getIdNumber(),
+                request.getGhanacardNumber(),
                 request.getPin()
         );
         return new SignupResponse(result.customerId(), result.primaryAccountId());
@@ -36,7 +36,7 @@ public class CustomerController {
 
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody CustomerLoginRequest request) {
-        AuthService.LoginResult result = authService.login(request.getIdNumber(), request.getPin());
+        AuthService.LoginResult result = authService.login(request.getGhanacardNumber(), request.getPin());
         return new LoginResponse(result.token(), result.customerId(), result.expiresAt());
     }
 }

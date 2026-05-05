@@ -7,7 +7,7 @@ import lombok.Data;
 public class CustomerLoginRequest {
 
     @NotBlank
-    private String idNumber;
+    private String ghanacardNumber;
 
     @NotBlank
     private String pin;

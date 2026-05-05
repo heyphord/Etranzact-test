@@ -21,7 +21,7 @@ public class SignupRequest {
     private LocalDate dob;
 
     @NotBlank
-    private String idNumber;
+    private String ghanacardNumber;
 
     @NotBlank
     private String pin;
